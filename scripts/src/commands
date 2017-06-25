@@ -1,0 +1,39 @@
+function has_reflexlibre_applist() {
+  sudo yunohost app listlists | grep -q reflexlibre
+}
+
+function fetch_reflexlibre_applist() {
+  info "Fetching ReflexLibre app list..."
+
+  sudo yunohost app fetchlist -n reflexlibre -u https://reflexlibre.net/reflexlibre.json |& to_logs
+}
+
+function has_testing_kernel() {
+  [ -f /etc/apt/sources.list.d/testing.list -o -f /etc/apt/sources.list.d/backports.list ]\
+    && dpkg -l | grep -q linux-image-4
+}
+
+function remove_testing_kernel() {
+  info "Removing testing kernel..."
+
+  sudo rm -f /etc/apt/sources.list.d/{backports,testing}.list
+  sudo rm -f /etc/apt/preferences.d/kernel-{backports,testing}
+
+  local kernel_version="$(uname -r)"
+  echo "linux-image-${kernel_version} linux-image-${kernel_version}/prerm/removing-running-kernel-${kernel_version} boolean false" | sudo debconf-set-selections |& to_logs
+
+  $_APT remove --purge -y --force-yes '^linux-image-4.*' flash-kernel u-boot-tools u-boot-sunxi |& to_logs
+
+  if has_encryptedfs; then
+    echo 'LINUX_KERNEL_CMDLINE="console=ttyS2 hdmi.audio=EDID:0 disp.screen0_output_mode=EDID:1280x720p60 root=/dev/mapper/root cryptopts=target=root,source=/dev/mmcblk0p2,cipher=aes-xts-plain64,size=256,hash=sha1 rootwait sunxi_ve_mem_reserve=0 sunxi_g2d_mem_reserve=0 sunxi_no_mali_mem_reserve sunxi_fb_mem_reserve=0 panic=10 loglevel=6 consoleblank=0"' | sudo tee /etc/default/flash-kernel &> /dev/null
+  else
+    echo 'LINUX_KERNEL_CMDLINE="console=ttyS1 hdmi.audio=EDID:0 disp.screen0_output_mode=EDID:1280x720p60 root=/dev/mmcblk0p1 rootwait sunxi_ve_mem_reserve=0 sunxi_g2d_mem_reserve=0 sunxi_no_mali_mem_reserve sunxi_fb_mem_reserve=0 panic=10 loglevel=6 consoleblank=0"' | sudo tee /etc/default/flash-kernel &> /dev/null
+  fi
+
+  $_APT clean |& to_logs
+  $_APT update |& to_logs
+  $_APT install -y --force-yes -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confold linux-image-armmp flash-kernel u-boot-sunxi u-boot-tools |& to_logs
+
+  sudo update-initramfs -k all -u |& to_logs
+}
+

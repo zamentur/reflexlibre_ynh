@@ -1,0 +1,27 @@
+{
+    "name": "Suivi ReflexLibre",
+    "id": "reflexlibre",
+    "packaging_format": 1,
+    "description": {
+        "en": "Suivi ReflexLibre helps ensuring that your mini-server is working as expected",
+        "fr": "Suivi ReflexLibre s'assure que votre mini-serveur fonctionne comme prévue"
+    },
+    "license": "AGPL-3",
+    "maintainer": {
+        "name": "ljf",
+        "email": "ljf+yunohost@reflexlibre.net",
+        "url": "https://reflexlibre.net"
+    },
+    "version": "0.1",
+    "url": "https://reflexlibre.net",
+    "requirements": {
+        "yunohost": ">= 2.6.4"
+    },
+    "multi_instance": "false",
+    "services": [
+        "nginx"
+    ],
+    "arguments": {
+        "install" : []
+    }
+}

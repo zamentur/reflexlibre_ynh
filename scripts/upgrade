@@ -1,0 +1,25 @@
+#!/bin/bash
+
+source src/env
+source src/helpers
+source src/commands
+
+version=$_CURRENTVERSION
+
+info "Current version is ${version}"
+info "Latest version is ${_LATESTVERSION}"
+
+if [ "${version}" = "${_LATESTVERSION}" ]; then
+  info "Up-to-date, nothing to do"
+  exit 0
+fi
+
+info "Upgrading..."
+
+# 0.1 -> 0.2.1
+if [ "${version}" = 0.1 ]; then
+fi
+
+info "Upgrading done"
+
+exit 0

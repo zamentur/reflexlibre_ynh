@@ -1,0 +1,17 @@
+#!/bin/bash
+
+source src/env
+source src/helpers
+source src/commands
+
+set_version "${_LATESTVERSION}"
+
+# Adds ReflexLibre app list
+if ! has_reflexlibre_applist; then
+  fetch_reflexlibre_applist
+fi
+
+# Removes testing kernel 4.* bugged with Olimex network cards
+if is_olinux_board && has_testing_kernel; then
+  remove_testing_kernel
+fi

@@ -1,2 +1,2 @@
 # reflexlibre_ynh
-Application YunoHost permetant le suivi par ReflexLibre
+Application YunoHost permetant le suivi d'une instance YunoHost par ReflexLibre
