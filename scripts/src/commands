@@ -5,7 +5,7 @@ function has_reflexlibre_applist() {
 function fetch_reflexlibre_applist() {
   info "Fetching ReflexLibre app list..."
 
-  sudo yunohost app fetchlist -n reflexlibre -u https://reflexlibre.net/reflexlibre.json |& to_logs
+  sudo yunohost app fetchlist -n reflexlibre -u https://apps.reflexlibre.net/reflexlibre.json |& to_logs
 }
 
 function has_testing_kernel() {
